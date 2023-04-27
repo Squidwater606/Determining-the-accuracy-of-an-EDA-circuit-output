@@ -16,6 +16,7 @@ underDampingFilepaths = ['data/signalData/underdamped/UDPULSE.csv','data/signalD
 udγ,udω = 0.5,0.5
 
 columnIndex = ['in s','C1 in V','C2 in V','C3 in V','C4 in V']
+scalings = [-1,-10,-100]
 
 # define functions:
 def readData(path):
@@ -77,7 +78,7 @@ def solveODEs(func,time,γ,ω):
         return None
 
 
-def plot(filepaths,columnIndex,γ,ω):
+def plot(filepaths,columnIndex,γ,ω,scalings):
     fig, axs = plt.subplots(nrows=5, ncols=len(filepaths), figsize=(20, 10))
     for i, filepath in enumerate(filepaths):
         data = readData(filepath)
@@ -91,9 +92,9 @@ def plot(filepaths,columnIndex,γ,ω):
             axs[1][i].plot(timeZeroed,y,color='r')
             axs[2][i].plot(timeZeroed,yPrime,color='r')
             axs[3][i].plot(timeZeroed,yDoublePrime,color='r')
-            axs[1][i].plot(timeZeroed,integAmp2Signal*-1,color='m')
-            axs[2][i].plot(timeZeroed,invAmpSignal*10,color='m')
-            axs[3][i].plot(timeZeroed,sumAmpSignal*100,color='m')
+            axs[1][i].plot(timeZeroed,integAmp2Signal*scalings[0],color='m')
+            axs[2][i].plot(timeZeroed,invAmpSignal*scalings[1],color='m')
+            axs[3][i].plot(timeZeroed,sumAmpSignal*scalings[2],color='m')
             axs[4][i].plot(timeZeroed,crossCorr,color='g')
             axs[4][i].text(0.95, 0.95, f"Normalized 'r': {crossCorrCoef:.2f}", transform=axs[4][i].transAxes, ha='right', va='top', bbox=dict(facecolor='white', alpha=0.5))
     fig.text(0.5, 0.04, 'Time (s)', ha='center')
@@ -102,10 +103,10 @@ def plot(filepaths,columnIndex,γ,ω):
     plt.show()
 
 # Critical-Damping:
-plot(criticalDampingFilepaths,columnIndex,cdγ,cdω)
+plot(criticalDampingFilepaths,columnIndex,cdγ,cdω,scalings)
 
 # Overdamping:
-plot(overDampingFilepaths,columnIndex,odγ,odω)
+plot(overDampingFilepaths,columnIndex,odγ,odω,scalings)
 
 # Underdamping:
-plot(underDampingFilepaths,columnIndex,udγ,udω)
+plot(underDampingFilepaths,columnIndex,udγ,udω,scalings)
