@@ -64,7 +64,9 @@ def normCrossCorr(ft1,ft2,func1,func2,time):
     normC12 = C12/normFactor
     normC21 = C21/normFactor
     nccCoeff = (np.max(np.abs(normC12))+np.max(np.abs(normC21)))/2
-    phaseDiff = np.arccos(np.sum(normC21*normC12)/(np.sqrt(np.sum(normC21**2))*np.sqrt(np.sum(normC12**2))))
+    dotProduct = np.dot(func1, func2)
+    magnitudeProduct = np.linalg.norm(func1)*np.linalg.norm(func2)
+    phaseDiff = np.arccos(dotProduct/magnitudeProduct)
     return normC12,normC21,nccCoeff,phaseDiff
 
 def solve(sigInpt,func,time,γ,ω):
