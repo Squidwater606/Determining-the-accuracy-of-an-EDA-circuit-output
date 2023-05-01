@@ -65,15 +65,13 @@ def normCrossCorr(ft1,ft2,func1,func2,time):
     normC21 = C21/normFactor
     nccCoeff = (np.max(np.abs(normC12))+np.max(np.abs(normC21)))/2
     phaseDiff = np.arccos(np.sum(normC21*normC12)/(np.sqrt(np.sum(normC21**2))*np.sqrt(np.sum(normC12**2))))
-    if phaseDiff < 0:
-        phaseDiff += np.pi
     return normC12,normC21,nccCoeff,phaseDiff
 
 def solve(sigInpt,func,time,γ,ω):
     shape = len(time)
     ftInpt,freqs = fft(sigInpt,time)
     ftFunc,f = fft(func,time)
-    yFft = ftInpt/(-(freqs**2)+γ*(1j)*freqs+ω)
+    yFft = ftInpt/(-(freqs**2)+γ/2*(1j)*freqs+ω)
     y = ifft(yFft,shape)
     yPrime = np.gradient(y, time)
     yDoublePrime = np.gradient(yPrime, time)
@@ -126,14 +124,12 @@ def plotShrunk(filepaths,columnIndex,γ,ω,scalings):
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
     plt.show()
 
-# Critical-Damping:
+# full figures:
 plotFull(criticalDampingFilepaths,columnIndex,cdγ,cdω,scalings)
-plotShrunk(criticalDampingFilepaths,columnIndex,cdγ,cdω,scalings)
-
-# Overdamping:
 plotFull(overDampingFilepaths,columnIndex,odγ,odω,scalings)
-plotShrunk(overDampingFilepaths,columnIndex,odγ,odω,scalings)
-
-# Underdamping:
 plotFull(underDampingFilepaths,columnIndex,udγ,udω,scalings)
+
+# shrunk figures:
+plotShrunk(criticalDampingFilepaths,columnIndex,cdγ,cdω,scalings)
+plotShrunk(overDampingFilepaths,columnIndex,odγ,odω,scalings)
 plotShrunk(underDampingFilepaths,columnIndex,udγ,udω,scalings)
